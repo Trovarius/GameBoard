@@ -1,5 +1,5 @@
 var socketio = io.connect();
-var id_chat = window.location.href.match(/#(\d+)/)[0].replace('#', '');
+var id_chat = window.location.href.match(/(\d+)/)[0];
 
 
 socketio.on('client', function(data) {

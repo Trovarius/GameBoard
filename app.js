@@ -16,7 +16,7 @@ app.get('/', function(req, res){
 
 app.get('/chat', function(req, res) {
   var newId = Math.round(Math.random() * 100000);
-  res.redirect('chat/#'+newId);
+  res.redirect('/chat/'+newId);
 });
 
 app.get('/chat/:id', function(req, res){
