@@ -6,11 +6,13 @@ html
     h1 GameBoard
 
     #container
+      - if(erro)
+            span#error #{erro}
       span
+        input#txtName(placeholder="Your player name...")
+        input#txtJoin(placeholder="Id chat to join...")
         button#btnJoin Entrar
         button#btnCreate Criar
-        a(href="/chat")
-          p Criar
         script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
         script(src="js/index.js")
 
