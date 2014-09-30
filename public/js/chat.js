@@ -1,9 +1,7 @@
 var socketio = io.connect();
 
-
-
 function Mensagem(){
-  var url_parse =  window.location.href.match(/game\/(\d+)\/(\w+)/));
+  var url_parse =  window.location.href.match(/game\/(\d+)\/(\w+)/);
   this.id_chat = url_parse[1];
   this.player_name = url_parse[2];
   msg= this;
@@ -25,7 +23,10 @@ $(document).ready(function(){
 
 
   $('#btnSend').click(function() {
-    socketio.emit('mensagem', {id: id_chat , message: 'teste'});
+    if($('#txtMensagem').val() != "") {
+      console.log($('#txtMensagem').val());
+      msg.send($('#txtMensagem').val());
+    }
   });
   
   msg.send('novo player entrou na sala.');
