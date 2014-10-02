@@ -1,15 +1,25 @@
 doctype html
 html
   head
-      title Chat
+      title BoardGame
       script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js") 
       script(src="/socket.io/socket.io.js")
       script(src="/js/chat.js")
-    body
-      #mensagens
-        p
-      #texto
-        p
-          input(type='text')#txtMensagem
-          button#btnSend Enviar
+      script(src="/js/board.js")
+      link(rel="stylesheet", type="text/css", href="/style/board.css")
+      body
+        div.head
+          h1 Board Game
 
+        div.container
+
+          div.game_board
+            canvas#board(width="750", height="750")
+            input#txtColorGround(type="color", value="#fff")
+            button#btnMapSend Enviar Mapa
+
+          div.chat
+            span.mensagens
+            input(type='text')#txtMensagem
+            button#btnSend Enviar
+      

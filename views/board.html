@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        canvas {border: solid 1px;}
+        .head, .container {width:100%; display:block;}
+        .head {align:center}
+        .container .game_board {width:60%; float:left; display:block; cursor:crosshair;}
+        .container .chat {border:solid 1px; display:block; width:35%; float:right; height: 90%}
+        .container .chat .mensagens { height: 80%; display:block; overflow:auto; width:35%;}
+        .button {width: 80px;}
+    </style>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+       function Board(obj){
+           var canvas = obj,
+           $canvas = $(obj);
+           this.ctx = canvas.getContext('2d');
+           this.squares = [];
+           this.mouseDown = false;
+
+           board = this;
+           this.SQUARE_NUMBER = 20;
+           this.BLOCK_SIZE = canvas.width / this.SQUARE_NUMBER;
+
+           function getCursorPosition(event){
+               var point = {x: -1, y: -1};
+
+               if(event.pageX != undefined && event.pageY != undefined){
+                   point.x = event.pageX - canvas.offsetLeft;
+                   point.y = event.pageY - canvas.offsetTop;
+               }else{
+                   point.x = event.clientX - canvas.offsetLeft;
+                   point.y = event.clientY - canvas.offsetTop;
+               }
+
+               return point;
+           }
+
+           $canvas.mousemove(function(evt){
+               //var position = getCursorPosition(evt);
+               var position = {x: evt.pageX - canvas.offsetLeft,
+                               y: evt.pageY - canvas.offsetTop};
+
+               var square = board.GetElementByPosition(position);
+              
+               if(board.mouseDown){
+               square.background = $('#txtColorGround').val();
+               board.DrawBoard();
+               }
+               }).mousedown(function(){
+                   board.mouseDown = true;               
+               }).mouseup(function(){
+                   board.mouseDown = false; 
+               });
+
+           this.GetElementByPosition = function(position){
+              for(var index in board.squares){
+                     square = board.squares[index];
+                     if(position.y > square.top && position.y < square.top + square.size &&
+                             position.x > square.left && position.x < square.left + square.size)
+                     {
+                        return square;
+                        break;
+                     }
+               }
+           }
+
+           this.InitializeSquares = function(){
+               for(var row = 0; row < this.SQUARE_NUMBER; row++){
+                   for(var column = 0; column < this.SQUARE_NUMBER; column++){
+                       this.squares.push({x: row, 
+                                          y: column, 
+                                          top: row * board.BLOCK_SIZE, 
+                                          left: column * board.BLOCK_SIZE,
+                                          size: this.BLOCK_SIZE,
+                                          background: 'white',
+                                          objects: []
+                                          });
+                   }
+               }
+           }
+
+           this.DrawBoard = function(){
+               this.ctx.clearRect(0,0, canvas.width, canvas.height);
+
+               for(var index in this.squares){
+                    square = this.squares[index];
+                    this.ctx.beginPath();
+                    this.ctx.rect(square.left, square.top, square.size, square.size);
+                    this.ctx.lineWidth = '0.5';
+                    this.ctx.strokeStyle = 'black';
+                    this.ctx.fillStyle = square.background;
+                    this.ctx.fill();
+                    this.ctx.stroke();
+              }
+           }          
+       }
+
+          function roll(max){
+             return Math.floor(Math.random() * max) + 1
+          }
+
+      
+       $(document).ready(function(){
+          var b = new Board(document.getElementById('board'));
+          b.InitializeSquares();
+          b.DrawBoard();
+          var showMesage = function(msg){
+              $('span.mensagens').append('<p>'+msg+'</p>');     
+          }
+
+
+          $('#btnSend').click(function(){
+              showMesage($('#txtMensage').val());
+          });
+
+          $('button.button.dice').click(function(){
+                var dice = $(this).attr('id').match(/(\d+)/)[0];
+
+                var result = roll(parseInt(dice));
+                var bonus =  parseInt($('#txtBonus' + $(this).attr('id')).val().match(/(\d+)/) || 0);
+                
+                $('#txtBonus' + $('this').attr('id')).val('0');
+                showMesage(result +' + ' + bonus  + ' = ' + (result + bonus));
+          });
+
+
+       });
+
+    </script>
+</head>
+<body>
+    <div class="head">
+        <h1> Board Game</h1>
+    </div>
+
+    <div class="container">
+
+    <div class="game_board">
+        <canvas id="board" width="750" height="750"></canvas>
+        <input type="color" id="txtColorGround" value="#ffffff" />
+    </div>
+
+    <div class="chat">
+        <span class="mensagens">
+        </span>
+        <input id="txtMensage" type="text">
+        <button id="btnSend">Enviar</button>
+        <span>
+            <table>
+               <tr>
+                   <td><button id="d100" name="d100" class="button dice">D100</button></td>
+                   <td><button id="d20" name="d20" class="button dice">D20</button></td>
+                   <td><button id="d12" name="d12" class="button dice">D12</button></td>
+                   <td><button id="d10" name="d10" class="button dice">D10</button></td>
+               </tr>
+               <tr>
+                   <td><input type="number" name="txtBonusd100" id="txtBonusd100" min="-100" max="100" value="0" /></td>
+                   <td><input type="number" name="txtBonusd20" id="txtBonusd20" min="-100" max="100" value="0" /></td>
+                   <td><input type="number" name="txtBonusd12" id="txtBonusd12" min="-100" max="100" value="0" /></td>
+                   <td><input type="number" name="txtBonusd10" id="txtBonusd10" min="-100" max="100" value="0" /></td>
+               </tr>
+          
+               <tr>
+                   <td><button id='d8' name='d8' class="button dice">D8</button></td>
+                   <td><button id="d6" name="d6" class="button dice">D6</button></td>
+                   <td><button id="d4" name="d4" class="button dice">D4</button></td>
+                   <td><button id="d2" name="d2" class="button dice">D2</button></td>
+               </tr>
+               <tr>
+                   <td><input type="number" name="txtBonusd8" id="txtBonusd8" min="-100" max="100" value="0" /></td>
+                   <td><input type="number" name="txtBonusd6" id="txtBonusd6" min="-100" max="100" value="0" /></td>
+                   <td><input type="number" name="txtBonusd4" id="txtBonusd4" min="-100" max="100" value="0" /></td>
+                   <td><input type="number" name="txtBonusd2" id="txtBonusd2" min="-100" max="100" value="0" /></td>
+               </tr>
+            </table>
+        </span>
+       </div>
+
+    </div>
+</body>
+</html>

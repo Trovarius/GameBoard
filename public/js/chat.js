@@ -9,26 +9,58 @@ function Mensagem(){
   this.send = function(msg){
    socketio.emit('mensagem', {id: this.id_chat, player: this.player_name, message: msg});
   };
+
+  this.sendMap = function(squares) {
+    socketio.emit('map', {id: this.id_chat, player:this.player_name, map: squares});
+  }
   
   this.receive = function(data){
-    if(data['id']== msg.id_chat)
-      alert(data['message']);
+    if(data['id']== msg.id_chat){
+      console.log(data);
+      $('span.mensagens').append('<p>' + data['message'] + '</p>')
+    }
   };
 }
 
 $(document).ready(function(){
- var msg = new Mensagem();
+  var msg = new Mensagem();
+  var b = new Board(document.getElementById('board'));
 
-  socketio.on('client', msg.receive);
+  socketio.on('client', function(data){
+    if(data['id'] != msg.id_chat) return;
+
+    if(data['message'] != null)
+      $('span.mensagens').append('<p>' + data['message'] + '</p>');
+
+    if(data['map'] != null)
+      b.UpdateMap(data['map']);
+  });
 
 
   $('#btnSend').click(function() {
     if($('#txtMensagem').val() != "") {
-      console.log($('#txtMensagem').val());
       msg.send($('#txtMensagem').val());
     }
   });
+
+  $('#btnMapSend').click(function(){
+    msg.sendMap(b.squares);
+  });
   
-  msg.send('novo player entrou na sala.');
+  
+  b.InitializeSquares();
+  b.DrawBoard();
+
+
+
+  $('button.button.dice').click(function(){
+        var dice = $(this).attr('id').match(/(\d+)/)[0];
+
+        var result = roll(parseInt(dice));
+        var bonus =  parseInt($('#txtBonus' + $(this).attr('id')).val().match(/(\d+)/) || 0);
+        
+          $('#txtBonus' + $('this').attr('id')).val('0');
+          showMesage(result +' + ' + bonus  + ' = ' + (result + bonus));
+    });
 
 });
