@@ -13,6 +13,13 @@ function Mensagem(){
   this.sendMap = function(squares) {
     socketio.emit('map', {id: this.id_chat, player:this.player_name, map: squares});
   }
+
+  this.sendRoll = function(dice, bonus){
+    var result = Math.floor(Math.random() * parseInt(dice)) + 1;
+    var mensagem = '(Rolled D' +dice.toString() + ')'+ result +' + ' + bonus  + ' = ' + (result + bonus);
+            console.log(mensagem);
+    socketio.emit('mensagem', {id: this.id_chat, player:this.player_name, dice: mensagem })
+  }
   
   this.receive = function(data){
     if(data['id']== msg.id_chat){
@@ -29,14 +36,21 @@ $(document).ready(function(){
   socketio.on('client', function(data){
     if(data['id'] != msg.id_chat) return;
     var date = new Date();
+    var mensagem = $('<p class="message"><span class="player">'+data['player']+' ('+date.getHours().toString()+':'+date.getMinutes().toString()+'): </span></p>');
+    console.log(data);
 
     if(data['message'] != null){
-      $('span.mensagens').append('<p class="message"><span>'+data['player']+' ('+date.getHours().toString()+':'+date.getMinutes().toString()+'): </span>' + data['message'] + '</p>');
-      $('span.mensagens').scrollTop( $(document).height());
-    }
-
-    if(data['map'] != null)
+      mensagem.append(data['message']);
+    } else if (data['dice'] != null){
+        console.log(data['dice']);
+       mensagem.append('<span class="diceRolled">'+data['dice']+'</span>');
+    } else if(data['map'] != null){
       b.UpdateMap(data['map']);
+      mensagem.text('Mapa atualizado');
+    }
+    
+    $('span.mensagens').append(mensagem);
+    $('span.mensagens').scrollTop( $(document).height());
   });
 
 
@@ -56,12 +70,9 @@ $(document).ready(function(){
 
   $('.dice').click(function(){
         var dice = $(this).attr('id').match(/(\d+)/)[0];
-
-        var result = Math.floor(Math.random() * parseInt(dice)) + 1;
         var bonus =  parseInt($('#bonusDice' + dice.toString()).val()) || 0;
-        
-          $('#bonusDice' + $('this').attr('id')).val('0');
-          msg.send('Rolled D' +dice.toString() + ' - '+ result +' + ' + bonus  + ' = ' + (result + bonus));
+        $('#bonusDice' + $('this').attr('id')).val('0');
+        msg.sendRoll(dice, bonus);
     });
     
   msg.send('Entrou na sala.');

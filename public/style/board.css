@@ -6,7 +6,8 @@ canvas {border: solid 1px;}
 .container .chat {border:solid 1px; display:block; width:35%; float:right; height: 750px}
 .container .chat #txtMensagem { width: 85%}
 .container .chat .mensagens { height: 78%; display:block; overflow:auto; width:97%; margin: 0 10px 0 10px; }
-.container .chat .mensagens .message span{ color: blue; font-weight: bold; }
+.container .chat .mensagens .message span.player{ color: blue; font-weight: bold; }
+.container .chat .mensagens .message span.diceRolled{ color: red; font-weight: bold; }
 .container .chat .dices table {width:100%; margin:10px}
 .dice {width: 80px;}
  
