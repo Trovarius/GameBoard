@@ -19,6 +19,10 @@ html
             input#txtColorGround(type="color", value="#fff")
             button#btnMapSend Enviar Mapa
 
+          div.tools
+            ul
+              li A
+
           div.chat
             span.mensagens
             input(type='text')#txtMensagem

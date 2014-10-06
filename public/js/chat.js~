@@ -61,7 +61,7 @@ $(document).ready(function(){
         var bonus =  parseInt($('#bonusDice' + dice.toString()).val()) || 0;
         
           $('#bonusDice' + $('this').attr('id')).val('0');
-          msg.send('(Rolled D' +dice.toString() + ')'+ result +' + ' + bonus  + ' = ' + (result + bonus));
+          msg.send('Rolled D' +dice.toString() + ' - '+ result +' + ' + bonus  + ' = ' + (result + bonus));
     });
     
   msg.send('Entrou na sala.');
