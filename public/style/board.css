@@ -2,12 +2,15 @@
 canvas {border: solid 1px;}
 .head, .container {width:100%; display:block;}
 .head {align:center}
-.container .game_board {width:60%; float:left; display:block; cursor:crosshair;}
-.container .chat {border:solid 1px; display:block; width:35%; float:right; height: 750px}
+.container {height:530px; display:block;}
+.container .tools {width:15%; height:100%; float:left; display:block; border:solid 1px;}
+.container .game_board {width:58%; height:100%; float:left; display:block; cursor:crosshair; border:solid 1px; margin:0px 8px 0px 8px;}
+.container .game_board #board{border:solid 1px; width:100%; height:100%}
+.container .chat {border:solid 1px; display:block; width:25%; float:right; height: 100%}
 .container .chat #txtMensagem { width: 85%}
-.container .chat .mensagens { height: 78%; display:block; overflow:auto; width:97%; margin: 0 10px 0 10px; }
+.container .chat .mensagens { height: 60%; display:block; overflow:auto; width:97%; margin: 0 10px 0 10px; }
 .container .chat .mensagens .message span.player{ color: blue; font-weight: bold; }
 .container .chat .mensagens .message span.diceRolled{ color: red; font-weight: bold; }
-.container .chat .dices table {width:100%; margin:10px}
-.dice {width: 80px;}
+.container .chat .dices table {width:100%;}
+.container .chat .dices table .dice {width: 80px;}
  

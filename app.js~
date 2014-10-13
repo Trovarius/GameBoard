@@ -36,11 +36,11 @@ app.get('/game/:id/:name', function(req, res){
 io.sockets.on('connection', function(socket){
 
  socket.on('mensagem', function(data) {
-    io.sockets.emit('client', {id: data['id'], player: data['player'], message: data["message"]});
+    io.sockets.emit('client', data);
  });
 
  socket.on('map', function(data) {
-    io.sockets.emit('client', {id: data['id'], player: data['player'], map: data["map"]});
+    io.sockets.emit('client', data);
  });
 
 });

@@ -16,7 +16,7 @@ function Mensagem(){
 
   this.sendRoll = function(dice, bonus){
     var result = Math.floor(Math.random() * parseInt(dice)) + 1;
-    var mensagem = '(Rolled D' +dice.toString() + ')'+ result +' + ' + bonus  + ' = ' + (result + bonus);
+    var mensagem = '(Rolled D' +dice.toString() + ') '+ result +' + ' + bonus  + ' = ' + (result + bonus);
             console.log(mensagem);
     socketio.emit('mensagem', {id: this.id_chat, player:this.player_name, dice: mensagem })
   }
@@ -76,4 +76,12 @@ $(document).ready(function(){
     });
     
   msg.send('Entrou na sala.');
+  
+  $('#txtColorGround').change(function(){
+  		b.Ferramenta = Board.TipoFerramenta.Terreno;
+  });
+
+  $('button#player').click(function(){
+  		b.Ferramenta = Board.TipoFeramenta.Player;
+  })
 });

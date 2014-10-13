@@ -76,4 +76,12 @@ $(document).ready(function(){
     });
     
   msg.send('Entrou na sala.');
+  
+  $('#txtColorGround').change(function(){
+  		b.Ferramenta = Board.TipoFerramenta.Terreno;
+  });
+
+  $('button#player').click(function(){
+  		b.Ferramenta = Board.TipoFerramenta.Player;
+  })
 });

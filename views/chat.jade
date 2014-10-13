@@ -13,16 +13,35 @@ html
           h4 #{name}
 
         div.container
+          div.tools
+            ul
+              li Map
+                ul
+                  li
+                    input#txtColorGround(type="color", value="#ffffff")
+                  li				
+                    button#btnMapSend Enviar Mapa
+                  li
+                    button#btnClearMap Limpar
+               li Players
+                 ul#players
+                   li 
+                     button#player1 Player 1
+               li Monstros
+                 ul#monsters
+                   li Monster1
+               li Objetos
+                 ul#objetos
+                   li Mesa
 
           div.game_board
-            canvas#board(width="750", height="750")
-            input#txtColorGround(type="color", value="#fff")
-            button#btnMapSend Enviar Mapa
-
+            svg#board(width="450", height="450")
+              
           div.chat
             span.mensagens
             input(type='text')#txtMensagem
             button#btnSend Enviar
+
             hr
             .dices
                 table
