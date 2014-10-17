@@ -30,7 +30,6 @@ html
                li Monstros
                  ul#monsters
                    li Monster1
-
                li Objetos
                  ul#objetos
                    li Mesa

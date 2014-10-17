@@ -81,7 +81,7 @@ $(document).ready(function(){
   		b.Ferramenta = Board.TipoFerramenta.Terreno;
   });
 
-  $('button#player').click(function(){
-  		b.Ferramenta = Board.TipoFeramenta.Player;
+  $('button#player1').click(function(){
+  		b.Ferramenta = Board.TipoFerramenta.Player;
   })
 });

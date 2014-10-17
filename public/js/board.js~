@@ -11,20 +11,40 @@
            this.squares = [];
 		   this.players = [];
 		   this.objects = [];
+		   this.monsters = [];
            this.mouseDown = false;
 		   this.Ferramenta = null;
 		   this.ObjSelecionado = null;
 
            board = this;
-           this.SQUARE_NUMBER = 20;
+           this.SQUARE_NUMBER = 15;
            this.BLOCK_SIZE = $canvas.width() / this.SQUARE_NUMBER;
 		   
+		   $canvas.find('[board-object-move="true"]').click(function(){
+		     alert('esse objeto vai se mover');
+		   });
+
 			function makeSVG(tag, attrs) {
             	var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
             	for (var k in attrs)
                 	el.setAttribute(k, attrs[k]);
             	return el;
         	}
+
+			function makeMovedObject(x, y, title, background){
+				background = background || "white";
+
+				var g = makeSVG('g', {transform: 'translate('+ x +','+ y +')', 'board-moved-object': 'true'});
+				var circle = makeSVG('circle', {r: '23', stroke:'blue', fill: 'white'});
+				var text = makeSVG('text', {dx: -25});
+				text.innerHTML = title;
+				
+				g.appendChild(circle);
+				g.appendChild(text);
+				$(g).appendTo($canvas);
+				g.toFront();
+				$(g).css('cursor', 'move');
+			}
 
 			function makeFloor(obj){
 				$(obj).bind('mouseover click', function(){
@@ -50,8 +70,9 @@
            }
 
 		   this.DesenharSquare = function(square, position, rightButton){
+			   console.log(this.Ferramenta);
 			    if(this.Ferramenta == null || this.Ferramenta == undefined || this.Ferramenta == Board.TipoFerramenta.Selecionado){
-					
+					alert('select');
 				}			    
 
 				if(this.Ferramenta == Board.TipoFerramenta.Objeto)
@@ -63,11 +84,8 @@
 				}
 
 				if(this.Ferramenta == Board.TipoFerramenta.Player){
-					var imagePlayer = new Image();
-					imagePlayer.src="/images/player.png";
-
-					this.players.push({ point: position });
-					this.DrawPlayer();
+					alert(this.Ferramenta);
+					makeMovedObject(position.x, position.y, 'Player 1', 'blue');
 				}
 		   }
 
@@ -134,6 +152,10 @@
 					$canvas.append(floor);
               }
            }
+
+		   this.AddPlayer = function(){
+		   		this.Plaer
+		   }
 
 		   this.DrawPlayer = function(){
 		   		for(var index in this.players){
