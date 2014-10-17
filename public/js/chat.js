@@ -1,10 +1,15 @@
 var socketio = io.connect();
 
+
 function Mensagem(){
   var url_parse =  window.location.href.match(/game\/(\d+)\/(\w+)/);
   this.id_chat = url_parse[1];
   this.player_name = url_parse[2];
   msg= this;
+  
+  this.addPlayer = function(){
+  	socketio.emit('add_player', {id: this.id_chat, player: this.player_name, message: "Entrou na sala"});
+  }
 
   this.send = function(msg){
    socketio.emit('mensagem', {id: this.id_chat, player: this.player_name, message: msg});
@@ -53,6 +58,15 @@ $(document).ready(function(){
     $('span.mensagens').scrollTop( $(document).height());
   });
 
+  socketio.on('add_player', function(data){
+	    console.log(data);
+  		b.AddPlayer(data.player);
+		msg.send('Entrou na sala');
+  });
+
+  socketio.on('player_disconnected', function(){
+  		b.RemovePlayer(data.player);
+  });
 
   $('#btnSend').click(function() {
     if($('#txtMensagem').val() != "") {
@@ -75,7 +89,7 @@ $(document).ready(function(){
         msg.sendRoll(dice, bonus);
     });
     
-  msg.send('Entrou na sala.');
+  msg.addPlayer();
   
   $('#txtColorGround').change(function(){
   		b.Ferramenta = Board.TipoFerramenta.Terreno;

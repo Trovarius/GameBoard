@@ -9,7 +9,7 @@
            var canvas = obj,
            $canvas = $(obj);
            this.squares = [];
-		   this.players = [];
+		   this.players = {};
 		   this.objects = [];
 		   this.monsters = [];
            this.mouseDown = false;
@@ -19,6 +19,7 @@
            board = this;
            this.SQUARE_NUMBER = 15;
            this.BLOCK_SIZE = $canvas.width() / this.SQUARE_NUMBER;
+
 		   
 		   $canvas.find('[board-object-move="true"]').click(function(){
 		     alert('esse objeto vai se mover');
@@ -35,15 +36,22 @@
 				background = background || "white";
 
 				var g = makeSVG('g', {transform: 'translate('+ x +','+ y +')', 'board-moved-object': 'true'});
-				var circle = makeSVG('circle', {r: '23', stroke:'blue', fill: 'white'});
-				var text = makeSVG('text', {dx: -25});
+				var circle = makeSVG('circle', {r: '23', stroke: background, fill: background});
+				var text = makeSVG('text', {dx: -10});
 				text.innerHTML = title;
 				
 				g.appendChild(circle);
 				g.appendChild(text);
-				$(g).appendTo($canvas);
-				g.toFront();
+				$canvas.append($(g));
+				
 				$(g).css('cursor', 'move');
+				$(g).mousedown(function(){
+					board.Ferramenta = Board.TipoFerramenta.Player;
+					board.ObjSelecionado = $(this);
+				})
+				.mouseup(function(){
+					board.ObjSelecionado = null;
+				});
 			}
 
 			function makeFloor(obj){
@@ -70,9 +78,8 @@
            }
 
 		   this.DesenharSquare = function(square, position, rightButton){
-			   console.log(this.Ferramenta);
 			    if(this.Ferramenta == null || this.Ferramenta == undefined || this.Ferramenta == Board.TipoFerramenta.Selecionado){
-					alert('select');
+
 				}			    
 
 				if(this.Ferramenta == Board.TipoFerramenta.Objeto)
@@ -84,8 +91,8 @@
 				}
 
 				if(this.Ferramenta == Board.TipoFerramenta.Player){
-					alert(this.Ferramenta);
-					makeMovedObject(position.x, position.y, 'Player 1', 'blue');
+					$(board.ObjSelecionado).attr('transform', 'translate('+ position.x +', '+ position.y +')');
+					//$(board.ObjSelecionado).toFront();
 				}
 		   }
 
@@ -153,30 +160,29 @@
               }
            }
 
-		   this.AddPlayer = function(){
-		   		this.Plaer
+		   this.AddPlayer = function(playerName){
+			   this.players[playerName.toString()] = {color:"blue", x: 30, y: 30};
+                this.DrawPlayer();
+		   }
+
+		   this.RemovePlayer = function(playerName){
+		   		var index = this.Player.indexOf(playerName);
+				this.players.splice(index, 1);
+				this.DrawPlayer();
 		   }
 
 		   this.DrawPlayer = function(){
 		   		for(var index in this.players){
 					var player = this.players[index];
-					if(player.point == null) continue;
-
-					//player.Image.onload = function(){
-					//	board.ctx.drawImage(player.Image, player.point.x, player.point.y, board.BLOCK_SIZE, board.BLOCK_SIZE);
-				//	}
-					this.ctx.beginPath();
-					this.ctx.arc(player.point.x, player.point.y, board.BLOCK_SIZE / 2.5, 0, 2 * Math.PI);
-					this.ctx.fillStyle = 'green';
-					this.ctx.fill();
-					this.ctx.lineWidth = 3;
-					this.ctx.strokeStyle = '#003300';
-					this.ctx.stroke();
+					makeMovedObject(player.x, player.y, index, player.color);
 				}
 		   }
 
-           this.UpdateMap = function(squares){
+           this.UpdateMap = function(squares, players, objects){
               this.squares = squares;
+			  this.players = players;
+			  this.objects = objects;
               this.DrawBoard();
+			  this.DrawPlayer();
            }
        }

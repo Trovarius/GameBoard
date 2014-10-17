@@ -25,7 +25,7 @@ app.get('/game/:id/:name', function(req, res){
   game = games[req.params.id];
 
   if(game != null && game.members.length > 0 &&  game.members.indexOf(req.params.name.toLowerCase()) != -1)
-    res.redirect("/index", {erro: "Nome de usuário já usado nesse jogo."});
+    res.render("/index", {erro: "Nome de usuário já usado nesse jogo."});
   else{
     game.members.push(req.params.name.toLowerCase());
     res.render('chat');
@@ -35,14 +35,26 @@ app.get('/game/:id/:name', function(req, res){
 
 io.sockets.on('connection', function(socket){
 
- socket.on('mensagem', function(data) {
-    io.sockets.emit('client', data);
- });
+	socket.on('add_player', function(data){
+		socket.player = data.player;
+		socket.room = games[data.id];
+		socket.join(socket.room.id);
+		socket.broadcast.to(socket.room.id).emit('add_player', data);
+	});
 
- socket.on('map', function(data) {
-    io.sockets.emit('client', data);
- });
+	socket.on('mensagem', function(data) {
+		socket.broadcast.to(socket.room.id).emit('client', data);
+	});
 
+	socket.on('map', function(data) {
+		socket.broadcast.to(socket.room.id).emit('client', data);
+	});
+	
+	socket.on('disconnect', function(){
+		games[socket.room.id].members.splice(games[socket.room.id].members.indexOf(socket.player) ,1);
+		socket.broadcast.to(socket.room.id).emit('client', {id: socket.room.id, player: socket.player, message: "Saiu da sala" });
+		socket.leave(socket.room.id_chat);
+	});
 });
 
 
